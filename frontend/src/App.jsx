@@ -1,10 +1,12 @@
-import "./App.css";
+
+import EmployeeDashboard from "./components/Auth/Dashboard/EmployeeDashboard";
 import Login from "./components/Auth/Login";
 
 function App() {
   return (
     <>
-   <Login/>
+   {/* <Login/> */}
+   <EmployeeDashboard/>
    
     </>
   );
