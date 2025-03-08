@@ -7,3 +7,47 @@ body{
 #tasklist::-webkit-scrollbar{
 display: none;
 }
+
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a4a #2a2a2a;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a;
+  border-radius: 4px;
+  border: 2px solid #2a2a2a;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #5a5a5a;
+}
+
+#tasklist::-webkit-scrollbar {
+  height: 8px;
+}
+
+#tasklist::-webkit-scrollbar-track {
+  background: #1c1c1c;
+  border-radius: 4px;
+}
+
+#tasklist::-webkit-scrollbar-thumb {
+  background-color: #4a4a4a;
+  border-radius: 4px;
+  border: 2px solid #1c1c1c;
+}
+
+#tasklist::-webkit-scrollbar-thumb:hover {
+  background-color: #5a5a5a;
+}
