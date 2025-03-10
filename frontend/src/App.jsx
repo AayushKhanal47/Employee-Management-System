@@ -1,5 +1,3 @@
-
-
 import { useContext, useState } from "react";
 import AdminDashboard from "./components/Auth/Dashboard/AdminDashboard";
 import EmployeeDashboard from "./components/Auth/Dashboard/EmployeeDashboard";
@@ -8,12 +6,14 @@ import { AuthContext } from "./context/AuthProvider";
 
 function App() {
   const [user, setUser] = useState(null);
-  const { userData } = useContext(AuthContext); 
+  const { userData } = useContext(AuthContext);
 
   const handleLogin = (email, password) => {
     if (email === "admin@me.com" && password === "1234") {
       setUser("admin");
-    } else if (userData.some(emp => emp.email === email && emp.password === password)) {
+    } else if (
+      userData.some((emp) => emp.email === email && emp.password === password)
+    ) {
       setUser("employee");
     } else {
       alert("Invalid Credentials! Please try again.");
@@ -22,12 +22,15 @@ function App() {
 
   return (
     <>
-      {!user ? <Login handleLogin={handleLogin} /> : user === "admin" ? <AdminDashboard /> : <EmployeeDashboard />}
+      {!user ? (
+        <Login handleLogin={handleLogin} />
+      ) : user === "admin" ? (
+        <AdminDashboard />
+      ) : (
+        <EmployeeDashboard />
+      )}
     </>
   );
 }
 
 export default App;
-
-
-
