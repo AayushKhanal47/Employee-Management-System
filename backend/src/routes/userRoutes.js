@@ -1,8 +1,10 @@
+import express from "express";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js"
+import User from "../models/User.js";
 
+const router = express.Router();
 
-export const loginUser = async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email, password });
 
@@ -13,4 +15,6 @@ export const loginUser = async (req, res) => {
     process.env.JWT_SECRET
   );
   res.json({ token, user: { email: user.email, role: user.role } });
-};
+});
+
+export default router;

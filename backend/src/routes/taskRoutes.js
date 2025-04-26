@@ -1,7 +1,22 @@
-import Task from "../models/Task.js";
-import User from "../models/User.js";
+import express from "express";
+import multer from "multer";
+import path from "path";
 
-const getTasks = async (req, res) => {
+import Task from "../models/Task.js";
+
+const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+
+router.get("/", async (req, res) => {
   const role = req.user.role;
   const userId = req.user.id;
 
@@ -15,9 +30,9 @@ const getTasks = async (req, res) => {
     "email name"
   );
   res.json(tasks);
-};
+});
 
-const createTask = async (req, res) => {
+router.post("/", upload.array("attachments"), async (req, res) => {
   const {
     title,
     assignee,
@@ -27,7 +42,6 @@ const createTask = async (req, res) => {
     priority,
     description,
     status,
-    progress,
   } = req.body;
   const attachments = req.files.map((file) => `/uploads/${file.filename}`);
 
@@ -40,12 +54,11 @@ const createTask = async (req, res) => {
     priority,
     description,
     status,
-    progress,
     attachments,
   });
 
   await task.save();
   res.status(201).json(task);
-};
+});
 
-module.exports = { getTasks, createTask };
+export default router;
