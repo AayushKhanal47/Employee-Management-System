@@ -1,12 +1,16 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
 const router = express.Router();
 
 router.post("/signup", async (req, res) => {
   const { email, password, role, name } = req.body;
+
+  if (!email || !password || !role || !name) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -23,22 +27,29 @@ router.post("/signup", async (req, res) => {
     name,
   });
 
-  await newUser.save();
+  try {
+    await newUser.save();
 
-  const token = jwt.sign(
-    { id: newUser._id, role: newUser.role },
-    process.env.JWT_SECRET
-  );
+    const token = jwt.sign(
+      { id: newUser._id, role: newUser.role },
+      process.env.JWT_SECRET
+    );
 
-  res
-    .status(201)
-    .json({ token, user: { email: newUser.email, role: newUser.role } });
+    res.status(201).json({ token, user: { email: newUser.email, role: newUser.role } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ email });
 
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  const user = await User.findOne({ email });
   if (!user) {
     return res.status(401).json({ message: "Invalid credentials" });
   }
