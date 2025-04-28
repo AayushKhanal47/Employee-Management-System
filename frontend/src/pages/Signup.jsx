@@ -11,7 +11,7 @@ const Signup = ({ handleLogin }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/api/signup", {
+      const response = await axios.post("http://localhost:5001/api/signup", {
         email,
         password,
         role,
@@ -31,14 +31,19 @@ const Signup = ({ handleLogin }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={submitHandler}>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <form
+        onSubmit={submitHandler}
+        className="bg-white p-6 rounded shadow-md w-full max-w-sm"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           type="email"
           placeholder="Email Address"
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
         />
         <input
           value={password}
@@ -46,6 +51,7 @@ const Signup = ({ handleLogin }) => {
           required
           type="password"
           placeholder="Password"
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
         />
         <input
           value={name}
@@ -53,15 +59,22 @@ const Signup = ({ handleLogin }) => {
           required
           type="text"
           placeholder="Full Name"
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
         />
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
+          className="w-full p-2 mb-4 border border-gray-300 rounded"
         >
           <option value="employee">Employee</option>
           <option value="admin">Admin</option>
         </select>
-        <button type="submit">Sign Up</button>
+        <button
+          type="submit"
+          className="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600"
+        >
+          Sign Up
+        </button>
       </form>
     </div>
   );
