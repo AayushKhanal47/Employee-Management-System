@@ -7,9 +7,12 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import isAutenticated from "./middlewares/authMiddleware.js";
+import authRoutes from "./routes/authRoutes.js";
+
+app.use("/api/auth", authRoutes);
 
 dotenv.config();
-console.log(dotenv.process)
+console.log(dotenv.process);
 
 connectDB();
 const app = express();
