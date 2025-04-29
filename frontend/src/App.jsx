@@ -8,6 +8,7 @@ import axios from "axios";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,10 +22,14 @@ function App() {
         })
         .catch(() => {
           localStorage.removeItem("token");
-          setUser(null); 
+          setUser(null);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     } else {
-      setUser(null); 
+      setUser(null);
+      setLoading(false);
     }
   }, []);
 
@@ -34,8 +39,12 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(null); 
+    setUser(null);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>
