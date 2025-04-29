@@ -21,7 +21,10 @@ function App() {
         })
         .catch(() => {
           localStorage.removeItem("token");
+          setUser(null); 
         });
+    } else {
+      setUser(null); 
     }
   }, []);
 
@@ -31,7 +34,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(null);
+    setUser(null); 
   };
 
   return (
@@ -41,15 +44,37 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route
           path="/dashboard/admin"
-          element={user?.role === "admin" ? <AdminDashboard handleLogout={handleLogout} /> : <Login />}
+          element={
+            user?.role === "admin" ? (
+              <AdminDashboard handleLogout={handleLogout} />
+            ) : (
+              <Login />
+            )
+          }
         />
         <Route
           path="/dashboard/employee"
-          element={user?.role === "employee" ? <EmployeeDashboard handleLogout={handleLogout} /> : <Login />}
+          element={
+            user?.role === "employee" ? (
+              <EmployeeDashboard handleLogout={handleLogout} />
+            ) : (
+              <Login />
+            )
+          }
         />
         <Route
           path="/"
-          element={user ? (user.role === "admin" ? <AdminDashboard handleLogout={handleLogout} /> : <EmployeeDashboard handleLogout={handleLogout} />) : <Login />}
+          element={
+            user ? (
+              user.role === "admin" ? (
+                <AdminDashboard handleLogout={handleLogout} />
+              ) : (
+                <EmployeeDashboard handleLogout={handleLogout} />
+              )
+            ) : (
+              <Login />
+            )
+          }
         />
       </Routes>
     </Router>

@@ -1,31 +1,40 @@
 import React, { createContext, useEffect, useState } from "react";
-import { getLocalStorage, setLocalStorage } from "../utils/localStorage";
+import axios from "axios";
 
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
   const [userData, setUserData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let storedData = getLocalStorage();
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem("token"); 
+        if (!token) {
+          setUserData([]);
+          setLoading(false);
+          return;
+        }
 
-    if (!storedData || !storedData.employees) {
-      storedData = {
-        employees: [
-          { email: "user1@me.com", password: "1234" },
-          { email: "user2@me.com", password: "1234" },
-          { email: "user3@me.com", password: "1234" },
-        ],
-      };
-      setLocalStorage(storedData);
-    }
+        const response = await axios.get("http://localhost:5001/api/users", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-    setUserData(storedData.employees);
-    console.log("Loaded employees:", storedData.employees);
+        setUserData(response.data.users); 
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        setUserData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ userData, setUserData }}>
+    <AuthContext.Provider value={{ userData, setUserData, loading }}>
       {children}
     </AuthContext.Provider>
   );

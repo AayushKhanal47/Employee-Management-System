@@ -7,25 +7,88 @@ import {
   AlertCircle,
   CheckCircle,
 } from "lucide-react";
+import axios from "axios";
 
 const CreateTask = () => {
+  const [title, setTitle] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [estimatedTime, setEstimatedTime] = useState("");
+  const [assignee, setAssignee] = useState("");
+  const [category, setCategory] = useState("");
   const [priority, setPriority] = useState("Medium");
+  const [description, setDescription] = useState("");
+  const [attachments, setAttachments] = useState(null);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("dueDate", dueDate);
+    formData.append("estimatedTime", estimatedTime);
+    formData.append("assignee", assignee);
+    formData.append("category", category);
+    formData.append("priority", priority);
+    formData.append("description", description);
+
+    if (attachments) {
+      for (let i = 0; i < attachments.length; i++) {
+        formData.append("attachments", attachments[i]);
+      }
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5001/api/tasks",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert("Task created successfully!");
+      // Reset form fields
+      setTitle("");
+      setDueDate("");
+      setEstimatedTime("");
+      setAssignee("");
+      setCategory("");
+      setPriority("Medium");
+      setDescription("");
+      setAttachments(null);
+    } catch (error) {
+      console.error("Error creating task:", error);
+      alert("Failed to create task. Please try again.");
+    }
+  };
 
   return (
     <div className="p-8 bg-gray-900 rounded-2xl shadow-xl border border-gray-800">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">Create New Task</h2>
         <div className="flex space-x-2">
-          <button className="px-4 py-2 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 transition text-sm font-medium">
+          <button
+            type="reset"
+            className="px-4 py-2 rounded-lg bg-gray-800 text-gray-300 hover:bg-gray-700 transition text-sm font-medium"
+          >
             Cancel
           </button>
-          <button className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition text-sm font-medium">
+          <button
+            type="submit"
+            form="create-task-form"
+            className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition text-sm font-medium"
+          >
             Save as Draft
           </button>
         </div>
       </div>
 
-      <form className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <form
+        id="create-task-form"
+        className="grid grid-cols-1 lg:grid-cols-2 gap-8"
+        onSubmit={submitHandler}
+      >
         {/* Left Column */}
         <div className="space-y-5">
           <div>
@@ -36,6 +99,8 @@ const CreateTask = () => {
               className="w-full py-3 px-4 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               type="text"
               placeholder="Enter task title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
@@ -48,6 +113,8 @@ const CreateTask = () => {
                 <input
                   className="w-full py-3 px-4 pl-10 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                   type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
                 />
                 <Calendar
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
@@ -65,6 +132,8 @@ const CreateTask = () => {
                   className="w-full py-3 px-4 pl-10 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
                   type="text"
                   placeholder="e.g. 2 hours"
+                  value={estimatedTime}
+                  onChange={(e) => setEstimatedTime(e.target.value)}
                 />
                 <Clock
                   className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
@@ -79,7 +148,11 @@ const CreateTask = () => {
               Assign To
             </label>
             <div className="relative">
-              <select className="w-full py-3 px-4 pl-10 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none">
+              <select
+                className="w-full py-3 px-4 pl-10 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none"
+                value={assignee}
+                onChange={(e) => setAssignee(e.target.value)}
+              >
                 <option value="">Select team member</option>
                 <option value="aayush">Aayush</option>
                 <option value="sujan">Sujan</option>
@@ -91,21 +164,6 @@ const CreateTask = () => {
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                 size={18}
               />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
             </div>
           </div>
 
@@ -114,7 +172,11 @@ const CreateTask = () => {
               Category
             </label>
             <div className="relative">
-              <select className="w-full py-3 px-4 pl-10 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none">
+              <select
+                className="w-full py-3 px-4 pl-10 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition appearance-none"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
                 <option value="">Select category</option>
                 <option value="design">Design</option>
                 <option value="development">Development</option>
@@ -125,21 +187,6 @@ const CreateTask = () => {
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                 size={18}
               />
-              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
             </div>
           </div>
 
@@ -197,6 +244,8 @@ const CreateTask = () => {
             <textarea
               className="w-full h-32 py-3 px-4 rounded-lg outline-none bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition resize-none"
               placeholder="Enter task details, requirements, and any additional information..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
 
@@ -205,7 +254,13 @@ const CreateTask = () => {
               Attachments
             </label>
             <div className="border-2 border-dashed border-gray-700 rounded-lg p-6 bg-gray-800/50 text-center">
-              <input type="file" className="hidden" id="file-upload" multiple />
+              <input
+                type="file"
+                className="hidden"
+                id="file-upload"
+                multiple
+                onChange={(e) => setAttachments(e.target.files)}
+              />
               <label htmlFor="file-upload" className="cursor-pointer">
                 <svg
                   className="mx-auto h-12 w-12 text-gray-500"

@@ -1,7 +1,7 @@
 import React from "react";
 import { LogOut, Bell, Search, Menu, Moon } from "lucide-react";
 
-const Header = ({ userName = "" }) => {
+const Header = ({ userName = "", handleLogout }) => {
   const today = new Date();
   const formattedDate = today.toLocaleDateString("en-US", {
     weekday: "long",
@@ -72,7 +72,7 @@ const Header = ({ userName = "" }) => {
 
               <button
                 className="flex items-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 transition-all text-white px-4 py-2 text-sm font-medium rounded-lg shadow-md"
-                onClick={() => console.log("Logout clicked")}
+                onClick={handleLogout}
               >
                 <LogOut size={18} />
                 <span>Logout</span>
