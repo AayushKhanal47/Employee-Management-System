@@ -17,7 +17,7 @@ const AuthProvider = ({ children }) => {
           return;
         }
 
-        const response = await axios.get("http://localhost:5001/api/users", {
+        const response = await axios.get("http://localhost:5005/api/users", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

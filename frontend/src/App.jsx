@@ -13,7 +13,7 @@ function App() {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:5001/api/auth/verify-token", {
+        .get("http://localhost:5005/api/auth/verify-token", {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
